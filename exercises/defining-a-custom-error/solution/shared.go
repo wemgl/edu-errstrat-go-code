@@ -1,5 +1,10 @@
 package pizza
 
+import (
+	"errors"
+	"fmt"
+)
+
 const TaskQueueName = "pizza-tasks"
 
 type Address struct {
@@ -36,6 +41,22 @@ type Distance struct {
 
 type ChargeStatus struct {
 	Success bool
+}
+
+type ChargeError struct {
+	StatusCode int
+	Err        error
+}
+
+func (e *ChargeError) Error() string {
+	return fmt.Sprintf("status %d: err %v", e.StatusCode, e.Err)
+}
+
+func chargeRequestError() error {
+	return &ChargeError{
+		StatusCode: 503,
+		Err:        errors.New("Credit Card Charge Error"),
+	}
 }
 
 type Bill struct {

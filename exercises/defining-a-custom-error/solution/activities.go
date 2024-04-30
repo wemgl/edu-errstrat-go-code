@@ -74,6 +74,8 @@ func ChargeCreditCard(ctx context.Context, bill Bill) (ChargeStatus, error) {
 	carderror := errors.New("Credit Card Charge Error")
 	if chargestatus.Success == false {
 		return chargestatus, carderror
+		//err := chargeRequestError()
+		//return chargestatus, err
 	}
 
 	return chargestatus, nil
