@@ -11,6 +11,7 @@ import (
 func PizzaWorkflow(ctx workflow.Context, order PizzaOrder) (OrderConfirmation, error) {
 	retrypolicy := &temporal.RetryPolicy{
 		MaximumInterval: time.Second * 10,
+		MaximumAttempts: 3,
 	}
 
 	options := workflow.ActivityOptions{
@@ -30,12 +31,12 @@ func PizzaWorkflow(ctx workflow.Context, order PizzaOrder) (OrderConfirmation, e
 	var distance Distance
 	err := workflow.ExecuteActivity(ctx, GetDistance, order.Address).Get(ctx, &distance)
 	if err != nil {
-		logger.Error("Unable get distance", "Error", err)
+		logger.Error("Unable to get distance", "Error", err)
 		return OrderConfirmation{}, err
 	}
 
-	if order.IsDelivery && distance.Kilometers > 25 {
-		return OrderConfirmation{}, errors.New("customer lives too far away for delivery")
+	if order.IsDelivery && distance.Kilometers > 10 {
+		return OrderConfirmation{}, errors.New("Out of Service Area")
 	}
 
 	// We use a short Timer duration here to avoid delaying the exercise
@@ -52,6 +53,13 @@ func PizzaWorkflow(ctx workflow.Context, order PizzaOrder) (OrderConfirmation, e
 	err = workflow.ExecuteActivity(ctx, SendBill, bill).Get(ctx, &confirmation)
 	if err != nil {
 		logger.Error("Unable to bill customer", "Error", err)
+		return OrderConfirmation{}, err
+	}
+
+	var chargestatus ChargeStatus
+	err = workflow.ExecuteActivity(ctx, ChargeCreditCard, confirmation).Get(ctx, &chargestatus)
+	if err != nil {
+		logger.Error("Unable to charge credit card", "Error", err)
 		return OrderConfirmation{}, err
 	}
 

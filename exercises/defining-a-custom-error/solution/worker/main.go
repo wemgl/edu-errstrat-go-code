@@ -1,8 +1,8 @@
 package main
 
 import (
+	pizza "errstrat/exercises/defining-a-custom-error/solution"
 	"log"
-	pizza "temporal102/exercises/debug-activity/solution"
 
 	"go.temporal.io/sdk/client"
 	"go.temporal.io/sdk/worker"
@@ -20,6 +20,7 @@ func main() {
 	w.RegisterWorkflow(pizza.PizzaWorkflow)
 	w.RegisterActivity(pizza.GetDistance)
 	w.RegisterActivity(pizza.SendBill)
+	w.RegisterActivity(pizza.ChargeCreditCard)
 
 	err = w.Run(worker.InterruptCh())
 	if err != nil {

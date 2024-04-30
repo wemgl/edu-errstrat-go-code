@@ -2,6 +2,7 @@ package pizza
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"time"
 
@@ -61,4 +62,19 @@ func SendBill(ctx context.Context, bill Bill) (OrderConfirmation, error) {
 	logger.Debug("SendBill complete", "ConfirmationNumber", confirmation.ConfirmationNumber)
 
 	return confirmation, nil
+}
+
+func ChargeCreditCard(ctx context.Context, bill Bill) (ChargeStatus, error) {
+
+	// pretend to charge card here
+	chargestatus := ChargeStatus{
+		Success: false,
+	}
+
+	carderror := errors.New("Credit Card Charge Error")
+	if chargestatus.Success == false {
+		return chargestatus, carderror
+	}
+
+	return chargestatus, nil
 }

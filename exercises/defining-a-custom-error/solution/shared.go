@@ -34,6 +34,10 @@ type Distance struct {
 	Kilometers int
 }
 
+type ChargeStatus struct {
+	Success bool
+}
+
 type Bill struct {
 	CustomerID  int
 	OrderNumber string

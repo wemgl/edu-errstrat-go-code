@@ -3,9 +3,9 @@ package main
 import (
 	"context"
 	"encoding/json"
+	pizza "errstrat/exercises/defining-a-custom-error/solution"
 	"fmt"
 	"log"
-	pizza "temporal102/exercises/debug-activity/solution"
 
 	"go.temporal.io/sdk/client"
 )
