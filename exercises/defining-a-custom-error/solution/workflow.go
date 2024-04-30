@@ -35,7 +35,6 @@ func PizzaWorkflow(ctx workflow.Context, order PizzaOrder) (OrderConfirmation, e
 		return OrderConfirmation{}, err
 	}
 
-	println(distance.Kilometers)
 	if order.IsDelivery && distance.Kilometers > 12 {
 		return OrderConfirmation{}, errors.New("Out of Service Area")
 	}
@@ -62,7 +61,8 @@ func PizzaWorkflow(ctx workflow.Context, order PizzaOrder) (OrderConfirmation, e
 	if err != nil {
 		var applicationErr *temporal.ApplicationError
 		if errors.As(err, &applicationErr) {
-			println(applicationErr.Error())
+			// You could be pushing individual values to a logging system here
+			println("Billing timestamp of failed order:", confirmation.BillingTimestamp)
 			logger.Error("Unable to charge credit card", "Error", err)
 		}
 
