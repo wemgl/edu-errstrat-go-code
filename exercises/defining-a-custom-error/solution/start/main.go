@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	pizza "errstrat/exercises/defining-a-custom-error/solution"
+	"flag"
 	"fmt"
 	"log"
 
@@ -17,7 +18,9 @@ func main() {
 	}
 	defer c.Close()
 
-	order := *createPizzaOrder()
+	var streetAddress = flag.String("address", "1 Main St", "Provide a street address")
+	flag.Parse()
+	order := *createPizzaOrder(streetAddress)
 
 	workflowID := fmt.Sprintf("pizza-workflow-order-%s", order.OrderNumber)
 
@@ -35,7 +38,7 @@ func main() {
 	var result pizza.OrderConfirmation
 	err = we.Get(context.Background(), &result)
 	if err != nil {
-		log.Fatalln("Unable get workflow result", err)
+		log.Fatalln("Unable to deliver pizza", err)
 	}
 
 	data, err := json.MarshalIndent(result, "", "  ")
@@ -45,7 +48,7 @@ func main() {
 	log.Printf("Workflow result: %s\n", string(data))
 }
 
-func createPizzaOrder() *pizza.PizzaOrder {
+func createPizzaOrder(streetAddress *string) *pizza.PizzaOrder {
 	customer := pizza.Customer{
 		CustomerID: 12983,
 		Name:       "María García",
@@ -54,7 +57,7 @@ func createPizzaOrder() *pizza.PizzaOrder {
 	}
 
 	address := pizza.Address{
-		Line1:      "701 Mission Street",
+		Line1:      *streetAddress,
 		Line2:      "Apartment 9C",
 		City:       "San Francisco",
 		State:      "CA",

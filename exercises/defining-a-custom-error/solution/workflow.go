@@ -35,7 +35,8 @@ func PizzaWorkflow(ctx workflow.Context, order PizzaOrder) (OrderConfirmation, e
 		return OrderConfirmation{}, err
 	}
 
-	if order.IsDelivery && distance.Kilometers > 10 {
+	println(distance.Kilometers)
+	if order.IsDelivery && distance.Kilometers > 12 {
 		return OrderConfirmation{}, errors.New("Out of Service Area")
 	}
 
