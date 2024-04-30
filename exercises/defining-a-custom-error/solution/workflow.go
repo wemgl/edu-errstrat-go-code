@@ -60,7 +60,17 @@ func PizzaWorkflow(ctx workflow.Context, order PizzaOrder) (OrderConfirmation, e
 	var chargestatus ChargeStatus
 	err = workflow.ExecuteActivity(ctx, ChargeCreditCard, confirmation).Get(ctx, &chargestatus)
 	if err != nil {
-		logger.Error("Unable to charge credit card", "Error", err)
+		var applicationErr *temporal.ApplicationError
+		if errors.As(err, &applicationErr) {
+			println(applicationErr.Error())
+			logger.Error("Unable to charge credit card", "Error", err)
+		}
+
+		var canceledErr *temporal.CanceledError
+		if errors.As(err, &canceledErr) {
+			// handle cancellation
+		}
+
 		return OrderConfirmation{}, err
 	}
 
