@@ -2,11 +2,11 @@ package pizza
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"time"
 
 	"go.temporal.io/sdk/activity"
+	"go.temporal.io/sdk/temporal"
 )
 
 func GetDistance(ctx context.Context, address Address) (Distance, error) {
@@ -46,7 +46,8 @@ func SendBill(ctx context.Context, bill Bill) (OrderConfirmation, error) {
 	// reject invalid amounts before calling the payment processor
 	if chargeAmount < 0 {
 		return OrderConfirmation{},
-			fmt.Errorf("invalid charge amount: %d (< 1)", chargeAmount)
+			// fmt.Errorf("invalid charge amount: %d (< 1)", chargeAmount)
+			temporal.NewNonRetryableApplicationError(fmt.Sprintf("invalid charge amount: %d (< 1)", chargeAmount), "invalidChargeError", nil, nil)
 	}
 
 	// pretend we called a payment processing service here :-)
@@ -64,19 +65,15 @@ func SendBill(ctx context.Context, bill Bill) (OrderConfirmation, error) {
 	return confirmation, nil
 }
 
-func ChargeCreditCard(ctx context.Context, bill Bill) (ChargeStatus, error) {
-
+func ProcessCreditCard(ctx context.Context, address Address) (ChargeStatus, error) {
 	// pretend to charge card here
 	chargestatus := ChargeStatus{
-		Success: false,
+		Success: true,
 	}
 
-	carderror := errors.New("Credit Card Charge Error")
-	if chargestatus.Success == false {
-		return chargestatus, carderror
-		//err := chargeRequestError()
-		//return chargestatus, err
+	if len(address.CardNumber) != 16 {
+		return chargestatus, temporal.NewNonRetryableApplicationError("Credit Card Charge Error", "CreditCardError", nil, nil)
+	} else {
+		return chargestatus, nil
 	}
-
-	return chargestatus, nil
 }

@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
-	pizza "errstrat/exercises/defining-a-custom-error/solution"
+	pizza "errstrat/exercises/handling-errors/solution"
 	"flag"
 	"fmt"
 	"log"
@@ -18,9 +18,9 @@ func main() {
 	}
 	defer c.Close()
 
-	var streetAddress = flag.String("address", "1 Main St", "Provide a street address")
+	var cardNumber = flag.String("creditcard", "1234123412341234", "Provide a credit card number")
 	flag.Parse()
-	order := *createPizzaOrder(streetAddress)
+	order := *createPizzaOrder(cardNumber)
 
 	workflowID := fmt.Sprintf("pizza-workflow-order-%s", order.OrderNumber)
 
@@ -48,7 +48,7 @@ func main() {
 	log.Printf("Workflow result: %s\n", string(data))
 }
 
-func createPizzaOrder(streetAddress *string) *pizza.PizzaOrder {
+func createPizzaOrder(cardNumber *string) *pizza.PizzaOrder {
 	customer := pizza.Customer{
 		CustomerID: 12983,
 		Name:       "María García",
@@ -57,11 +57,12 @@ func createPizzaOrder(streetAddress *string) *pizza.PizzaOrder {
 	}
 
 	address := pizza.Address{
-		Line1:      *streetAddress,
+		Line1:      "1 Main St",
 		Line2:      "Apartment 9C",
 		City:       "San Francisco",
 		State:      "CA",
 		PostalCode: "94103",
+		CardNumber: *cardNumber,
 	}
 
 	p1 := pizza.Pizza{

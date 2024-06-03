@@ -13,6 +13,7 @@ type Address struct {
 	City       string
 	State      string
 	PostalCode string
+	CardNumber string
 }
 
 type Customer struct {
