@@ -3,7 +3,7 @@
 During this exercise, you will:
 
 - Configure non-retryable errors for Activities
-- Implement customiz retry policies for Activities
+- Implement customize retry policies for Activities
 - Develop Workflow logic for fallback strategies in the case of Activity failure
 - Add Heartbeats and Heartbeat timeouts to help users monitor the health of Activities
 

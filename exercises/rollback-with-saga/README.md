@@ -2,8 +2,9 @@
 
 During this exercise, you will:
 
-- Orchestrate microservices using a Saga pattern to implement compensating transactions
+- Orchestrate Activities using a Saga pattern to implement compensating transactions
 - Handle failures with rollback logic
+- 
 
 Make your changes to the code in the `practice` subdirectory (look for `TODO`
 comments that will guide you to where you should make changes to the code). If
