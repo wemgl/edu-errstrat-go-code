@@ -1,7 +1,7 @@
 package main
 
 import (
-	pizza "errstrat/exercises/handling-errors/solution"
+	pizza "errstrat/exercises/rollback-with-saga/solution"
 	"log"
 
 	"go.temporal.io/sdk/client"
@@ -21,6 +21,9 @@ func main() {
 	w.RegisterActivity(pizza.GetDistance)
 	w.RegisterActivity(pizza.SendBill)
 	w.RegisterActivity(pizza.ProcessCreditCard)
+	w.RegisterActivity(pizza.UpdateInventory)
+	w.RegisterActivity(pizza.RevertInventory)
+	w.RegisterActivity(pizza.RefundCustomer)
 
 	err = w.Run(worker.InterruptCh())
 	if err != nil {

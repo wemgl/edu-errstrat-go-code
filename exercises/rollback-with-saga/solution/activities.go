@@ -77,3 +77,24 @@ func ProcessCreditCard(ctx context.Context, address Address) (ChargeStatus, erro
 		return chargestatus, nil
 	}
 }
+
+func UpdateInventory(ctx context.Context, items []Pizza) error {
+	// Here you would call your inventory management system to reduce the stock of your pizza inventory
+	logger := activity.GetLogger(ctx)
+	logger.Info("UpdateInventory complete", items)
+	return nil
+}
+
+func RevertInventory(ctx context.Context, items []Pizza) error {
+	// Here you would call your inventory management system to add the ingredients back into the pizza inventory.
+	logger := activity.GetLogger(ctx)
+	logger.Info("RevertInventory complete", items)
+	return nil
+}
+
+func RefundCustomer(ctx context.Context, bill Bill) error {
+	// Simulate refunding the customer
+	logger := activity.GetLogger(ctx)
+	logger.Info("Refunding", bill.Amount, "to customer", bill.CustomerID, "for order", bill.OrderNumber)
+	return nil
+}

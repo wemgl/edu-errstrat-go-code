@@ -6,6 +6,7 @@ import (
 
 	"go.temporal.io/sdk/temporal"
 	"go.temporal.io/sdk/workflow"
+	"go.uber.org/multierr"
 )
 
 func PizzaWorkflow(ctx workflow.Context, order PizzaOrder) (OrderConfirmation, error) {
@@ -40,6 +41,18 @@ func PizzaWorkflow(ctx workflow.Context, order PizzaOrder) (OrderConfirmation, e
 		return OrderConfirmation{}, errors.New("Out of Service Area")
 	}
 
+	err = workflow.ExecuteActivity(ctx, UpdateInventory, order.Items).Get(ctx, nil)
+	if err != nil {
+		return OrderConfirmation{}, err
+	}
+
+	defer func() {
+		if err != nil {
+			errCompensation := workflow.ExecuteActivity(ctx, RevertInventory, order.Items).Get(ctx, nil)
+			err = multierr.Append(err, errCompensation)
+		}
+	}()
+
 	// We use a short Timer duration here to avoid delaying the exercise
 	workflow.Sleep(ctx, time.Second*3)
 
@@ -56,6 +69,13 @@ func PizzaWorkflow(ctx workflow.Context, order PizzaOrder) (OrderConfirmation, e
 		logger.Error("Unable to bill customer", "Error", err)
 		return OrderConfirmation{}, err
 	}
+
+	defer func() {
+		if err != nil {
+			errCompensation := workflow.ExecuteActivity(ctx, RefundCustomer, bill).Get(ctx, nil)
+			err = multierr.Append(err, errCompensation)
+		}
+	}()
 
 	var chargestatus ChargeStatus
 	err = workflow.ExecuteActivity(ctx, ProcessCreditCard, order.Address).Get(ctx, &chargestatus)
