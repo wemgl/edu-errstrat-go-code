@@ -58,14 +58,14 @@ Because this is fundamentally the same Exercise as #1 and #2, you can run the Wo
 
 1. In one terminal, start the Worker by running:
    ```bash
-   `go run worker/main.go`
+   go run worker/main.go
    ```
 2. In another terminal, start the Workflow by executing `start/main.go`. To
    trigger the error handling and rollback, run it with the bad credit card
    number again (otherwise it will just complete successfully, without
    demonstrating rollback):
    ```bash
-   `go run start/main.go --creditcard 1234`
+   go run start/main.go --creditcard 1234
    ```
 3. In your Web UI, you should see a `WorkflowExecutionFailed` Event to indicate
    that the Workflow failed. If you review the Workflow Timeline view, you'll

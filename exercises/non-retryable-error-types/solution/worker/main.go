@@ -1,7 +1,7 @@
 package main
 
 import (
-	pizza "errstrat/exercises/handling-errors/solution"
+	pizza "errstrat/exercises/non-retryable-error-types/solution"
 	"log"
 
 	"go.temporal.io/sdk/client"
