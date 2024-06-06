@@ -62,7 +62,7 @@ thrown from the `ProcessCreditCard` Activity and handle it.
    var applicationErr *temporal.ApplicationError
 		if errors.As(err, &applicationErr) {}
    ```			
-   Within that block, you can handle the error, add additional logging, and so on. For example, you could add:
+   Within that `if errors.As() {}` block, you can handle the error, add additional logging, and so on. For example, you could add:
    ```
    println("Billing timestamp of failed order:", confirmation.BillingTimestamp)
    logger.Error("Unable to charge credit card", "Error", err)

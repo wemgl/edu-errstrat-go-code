@@ -3,7 +3,6 @@ package pizza
 import (
 	"context"
 	"fmt"
-	"math/rand"
 	"time"
 
 	"go.temporal.io/sdk/activity"
@@ -47,7 +46,6 @@ func SendBill(ctx context.Context, bill Bill) (OrderConfirmation, error) {
 	// reject invalid amounts before calling the payment processor
 	if chargeAmount < 0 {
 		return OrderConfirmation{},
-			// fmt.Errorf("invalid charge amount: %d (< 1)", chargeAmount)
 			temporal.NewNonRetryableApplicationError(fmt.Sprintf("invalid charge amount: %d (< 1)", chargeAmount), "invalidChargeError", nil, nil)
 	}
 
@@ -73,35 +71,29 @@ func ProcessCreditCard(ctx context.Context, address Address) (ChargeStatus, erro
 	}
 
 	if len(address.CardNumber) != 16 {
-		return chargestatus, temporal.NewApplicationError("Credit Card Charge Error", "CreditCardError", nil, nil)
+		return chargestatus, temporal.NewNonRetryableApplicationError("Credit Card Charge Error", "CreditCardError", nil, nil)
 	} else {
 		return chargestatus, nil
 	}
 }
 
-func NotifyDeliveryDriver(ctx context.Context) error {
-	/* This is a simulation of attempting to notify a delivery driver that
-	the order is ready for delivery. It starts by generating a number from 0 - 14.
-	From there a loop is iterated over from 0 < 10, each time checking to
-	see if the random number matches the loop counter and then sleeping for 5
-	seconds. Each iteration of the loop sends a heartbeat back letting the
-	Workflow know that progress is still being made. If the number matches a
-	loop counter, it is a success. If it doesn't, then a delivery driver was
-	unable to be contacted and failure is returned.
-	*/
-
+func UpdateInventory(ctx context.Context, items []Pizza) error {
+	// Here you would call your inventory management system to reduce the stock of your pizza inventory
 	logger := activity.GetLogger(ctx)
-	SuccessSimulation := rand.Intn(15)
+	logger.Info("UpdateInventory complete", items)
+	return nil
+}
 
-	for x := 0; x < 10; x++ {
-		if SuccessSimulation == x {
-			logger.Info("Delivery driver responded")
-			return nil
-		}
-		activity.RecordHeartbeat(ctx, x)
-		logger.Info("Heartbeat:", x)
-		time.Sleep(time.Second * 5)
-	}
+func RevertInventory(ctx context.Context, items []Pizza) error {
+	// Here you would call your inventory management system to add the ingredients back into the pizza inventory.
+	logger := activity.GetLogger(ctx)
+	logger.Info("RevertInventory complete", items)
+	return nil
+}
 
-	return temporal.NewApplicationError(fmt.Sprintf("Driver didn't respond."), "DriverError")
+func RefundCustomer(ctx context.Context, bill Bill) error {
+	// Simulate refunding the customer
+	logger := activity.GetLogger(ctx)
+	logger.Info("Refunding", bill.Amount, "to customer", bill.CustomerID, "for order", bill.OrderNumber)
+	return nil
 }

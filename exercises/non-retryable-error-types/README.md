@@ -55,14 +55,14 @@ Recall that a Retry Policy has the following attributes:
 - Maximum Interval: The maximum interval between retries
 - Maximum Attempts: The maximum number of execution attempts that can be made in the presence of failures
 
-You can also specify errors types that are not retryable in the Retry Policy. These
-are known as non-retryable error types.
+You can also specify errors types that are not retryable in the Retry Policy.
+These are known as non-retryable error types. In the `ProcessCreditCard`
+Activity in `activities.go`, you returned an `ApplicationFailure` with the
+type `CreditCardError`. Now you will specify that error type as
+non-retryable.
 
-1. In the `ProcessCreditCard` Activity in `activities.go`, you returned an
-   `ApplicationFailure` with the type `CreditCardError`.
-   Now you will specify that error type as non-retryable.
-2. Open `workflow.go`.
-3. A RetryPolicy has already been defined with the following configuration:
+1. Open `workflow.go`. A `RetryPolicy` has already been defined with the
+   following configuration:
 
 ```go
 	retrypolicy := &temporal.RetryPolicy{
@@ -76,24 +76,24 @@ are known as non-retryable error types.
 	}
 ```
 
-4. Add an additional parameter to `retrypolicy` like so:
+2. Add an additional parameter to `retrypolicy` like so:
 
 ```go
 NonRetryableErrorTypes: []string{"CreditCardError"},
 ```
 
-5. Save and close the file.
-6. Verify that your Error is once again failing the Workflow. In one terminal,
+3. Save and close the file.
+4. Verify that your Error is once again failing the Workflow. In one terminal,
    start the Worker by running:
    ```bash
    go run worker/main.go
    ```
-7. In another terminal, start the Workflow by executing `start/main.go` with bad
+5. In another terminal, start the Workflow by executing `start/main.go` with bad
    data to cause the error:
    ```bash
    go run start/main.go --creditcard 1234
    ```
-8. Go to the WebUI and view the status of the Workflow. You should see an
+6. Go to the WebUI and view the status of the Workflow. You should see an
    `ActivityTaskFailed` error.
 
 ## Part C: Add Heartbeats
@@ -117,13 +117,16 @@ and `true` is returned. If it doesn't, then a delivery driver was unable to be
 contacted and false is returned and the `status` of the `OrderConfirmation` will
 be updated to reflect this.
 
-1. Open `workflow.go`. Locate the `NotifyDeliveryDriver` function and uncomment it.
-2. Within the loop, after the success condition add a heartbeat, providing the
-   iteration number as the details.
+1. Open `workflow.go`. Locate the `NotifyDeliveryDriver` function and uncomment
+   it.
+2. Save and close the file.
+3. Next, open `activities.go`. Within the `PollDeliveryDriver` loop, above the
+   `logger` call, add a heartbeat, providing the iteration number as the
+   details.
    ```go
       activity.RecordHeartbeat(ctx, x)
    ```
-3. Save and close the file.
+4. Save and close the file.
 
 ## Part D: Add a Heartbeat Timeout
 

@@ -3,11 +3,9 @@ package pizza
 import (
 	"context"
 	"fmt"
-	"math/rand"
 	"time"
 
 	"go.temporal.io/sdk/activity"
-	"go.temporal.io/sdk/temporal"
 )
 
 func GetDistance(ctx context.Context, address Address) (Distance, error) {
@@ -47,8 +45,8 @@ func SendBill(ctx context.Context, bill Bill) (OrderConfirmation, error) {
 	// reject invalid amounts before calling the payment processor
 	if chargeAmount < 0 {
 		return OrderConfirmation{},
-			// fmt.Errorf("invalid charge amount: %d (< 1)", chargeAmount)
-			temporal.NewNonRetryableApplicationError(fmt.Sprintf("invalid charge amount: %d (< 1)", chargeAmount), "invalidChargeError", nil, nil)
+			// TODO Part A: Replace this error with a NewNonRetryableApplicationError
+			fmt.Errorf("invalid charge amount: %d (< 1)", chargeAmount)
 	}
 
 	// pretend we called a payment processing service here :-)
@@ -73,35 +71,8 @@ func ProcessCreditCard(ctx context.Context, address Address) (ChargeStatus, erro
 	}
 
 	if len(address.CardNumber) != 16 {
-		return chargestatus, temporal.NewApplicationError("Credit Card Charge Error", "CreditCardError", nil, nil)
+		// TODO Part A: Return a NewNonRetryableApplicationError here like in SendBill() above.
 	} else {
 		return chargestatus, nil
 	}
-}
-
-func NotifyDeliveryDriver(ctx context.Context) error {
-	/* This is a simulation of attempting to notify a delivery driver that
-	the order is ready for delivery. It starts by generating a number from 0 - 14.
-	From there a loop is iterated over from 0 < 10, each time checking to
-	see if the random number matches the loop counter and then sleeping for 5
-	seconds. Each iteration of the loop sends a heartbeat back letting the
-	Workflow know that progress is still being made. If the number matches a
-	loop counter, it is a success. If it doesn't, then a delivery driver was
-	unable to be contacted and failure is returned.
-	*/
-
-	logger := activity.GetLogger(ctx)
-	SuccessSimulation := rand.Intn(15)
-
-	for x := 0; x < 10; x++ {
-		if SuccessSimulation == x {
-			logger.Info("Delivery driver responded")
-			return nil
-		}
-		activity.RecordHeartbeat(ctx, x)
-		logger.Info("Heartbeat:", x)
-		time.Sleep(time.Second * 5)
-	}
-
-	return temporal.NewApplicationError(fmt.Sprintf("Driver didn't respond."), "DriverError")
 }

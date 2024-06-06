@@ -47,7 +47,7 @@ func SendBill(ctx context.Context, bill Bill) (OrderConfirmation, error) {
 	// reject invalid amounts before calling the payment processor
 	if chargeAmount < 0 {
 		return OrderConfirmation{},
-			// fmt.Errorf("invalid charge amount: %d (< 1)", chargeAmount)
+			// TODO Part A: Change this to a `NewApplicationError` so it's retryable.
 			temporal.NewNonRetryableApplicationError(fmt.Sprintf("invalid charge amount: %d (< 1)", chargeAmount), "invalidChargeError", nil, nil)
 	}
 
@@ -73,7 +73,7 @@ func ProcessCreditCard(ctx context.Context, address Address) (ChargeStatus, erro
 	}
 
 	if len(address.CardNumber) != 16 {
-		return chargestatus, temporal.NewApplicationError("Credit Card Charge Error", "CreditCardError", nil, nil)
+		return chargestatus, temporal.NewNonRetryableApplicationError("Credit Card Charge Error", "CreditCardError", nil, nil)
 	} else {
 		return chargestatus, nil
 	}
@@ -98,8 +98,9 @@ func NotifyDeliveryDriver(ctx context.Context) error {
 			logger.Info("Delivery driver responded")
 			return nil
 		}
-		activity.RecordHeartbeat(ctx, x)
+		// TODO Part C: Add a call to `activity.RecordHeartbeat()`
 		logger.Info("Heartbeat:", x)
+		// TODO Part F: Lengthen the `time.Sleep()` call so the Activity fails.
 		time.Sleep(time.Second * 5)
 	}
 
