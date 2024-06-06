@@ -3,6 +3,7 @@ package pizza
 import (
 	"context"
 	"fmt"
+	"math/rand"
 	"time"
 
 	"go.temporal.io/sdk/activity"
@@ -76,4 +77,31 @@ func ProcessCreditCard(ctx context.Context, address Address) (ChargeStatus, erro
 	} else {
 		return chargestatus, nil
 	}
+}
+
+func NotifyDeliveryDriver(ctx context.Context) error {
+	/* This is a simulation of attempting to notify a delivery driver that
+	the order is ready for delivery. It starts by generating a number from 0 - 14.
+	From there a loop is iterated over from 0 < 10, each time checking to
+	see if the random number matches the loop counter and then sleeping for 5
+	seconds. Each iteration of the loop sends a heartbeat back letting the
+	Workflow know that progress is still being made. If the number matches a
+	loop counter, it is a success. If it doesn't, then a delivery driver was
+	unable to be contacted and failure is returned.
+	*/
+
+	logger := activity.GetLogger(ctx)
+	SuccessSimulation := rand.Intn(15)
+
+	for x := 0; x < 10; x++ {
+		if SuccessSimulation == x {
+			logger.Info("Delivery driver responded")
+			return nil
+		}
+		activity.RecordHeartbeat(ctx, x)
+		logger.Info("Heartbeat:", x)
+		time.Sleep(time.Second * 5)
+	}
+
+	return temporal.NewApplicationError(fmt.Sprintf("Driver didn't respond."), "DriverError")
 }

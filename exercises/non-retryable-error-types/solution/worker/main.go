@@ -21,6 +21,7 @@ func main() {
 	w.RegisterActivity(pizza.GetDistance)
 	w.RegisterActivity(pizza.SendBill)
 	w.RegisterActivity(pizza.ProcessCreditCard)
+	w.RegisterActivity(pizza.NotifyDeliveryDriver)
 
 	err = w.Run(worker.InterruptCh())
 	if err != nil {

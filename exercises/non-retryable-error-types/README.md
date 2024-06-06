@@ -71,7 +71,7 @@ are known as non-retryable error types.
 	}
 
 	options := workflow.ActivityOptions{
-		StartToCloseTimeout: time.Second * 5,
+		StartToCloseTimeout: time.Second * 120,
 		RetryPolicy:         retrypolicy,
 	}
 ```
@@ -117,14 +117,13 @@ and `true` is returned. If it doesn't, then a delivery driver was unable to be
 contacted and false is returned and the `status` of the `OrderConfirmation` will
 be updated to reflect this.
 
-1. Open `activities.go`. Uncomment the line `boolean NotifyDeliveryDriver(OrderConfirmation order);`
-2. Locate the `NotifyDeliveryDriver` method and uncomment it.
-3. Within the loop, after the success condition add a heartbeat, providing the
+1. Open `workflow.go`. Locate the `NotifyDeliveryDriver` function and uncomment it.
+2. Within the loop, after the success condition add a heartbeat, providing the
    iteration number as the details.
-   ```java
-      Activity.getExecutionContext().heartbeat("Heartbeat: " + x);
+   ```go
+      activity.RecordHeartbeat(ctx, x)
    ```
-4. Save and close the file.
+3. Save and close the file.
 
 ## Part D: Add a Heartbeat Timeout
 
