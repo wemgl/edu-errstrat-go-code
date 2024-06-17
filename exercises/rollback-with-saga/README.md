@@ -30,8 +30,9 @@ added as a compensating action for `SendBill`.
 
 ## Part B: Add your new rollback Activities to your Workflow
 
-1. Open `workflow.go`. Note that the `UpdateInventory` Activity to your Workflow
-after validating an order, before the `SendBill` Activity is called.
+1. Open `workflow.go`. Note that the `UpdateInventory` Activity has been added
+   to your Workflow after validating an order, before the `SendBill` Activity is
+   called.
 2. Immediately after the `UpdateInventory` block, add the compensating Activity,
 `RevertInventory`, for this function. This will use a Go `defer` block:
 
