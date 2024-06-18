@@ -18,7 +18,7 @@ that will fail your Activities.
 
 Application Failures are used to communicate application-specific failures in
 Workflows and Activities. In Activities, returning an `ApplicationError` will
-cause the Activity to fail. However, this unless this Activity is specified as
+cause the Activity to fail. However, unless this Activity is specified as
 non-retryable, it will retry according to the Retry Policy. To have an Activity
 fail when an `ApplicationError` is returned, set it as non-retryable. Any other
 error that is returned in Go is automatically converted to an `ActivityError`.
