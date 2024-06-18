@@ -19,7 +19,7 @@ by default. After consideration, you've determined that while you may want to
 immediately fail your Workflow on failure, others who call your Activity may not.
 
 1. Open `activities.go`. In the `ProcessCreditCard` method from the last
-   Exercise, modify the exception that is being thrown to be retryable. To do
+exercise, modify the exception that is being thrown to be retryable. To do
    this, change `NewNonRetryableApplicationError` to `NewApplicationError`. Now,
    when an error is thrown from this Activity, the Activity will be retried.
 2. Save and close the file.
