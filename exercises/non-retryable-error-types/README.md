@@ -34,9 +34,9 @@ exercise, modify the exception that is being thrown to be retryable. To do
    go run start/main.go --creditcard 1234
    ```
 5. Go to the WebUI and view the status of the Workflow. It should be
-   **Running**. Inspect the Workflow and see that it is currently retrying
-   the exception, verifying that the exception is no longer non-retryable.
-   Terminate this Workflow in the WebUI, as it will never successfully complete.
+   **Running**. Inspect the Workflow and see that it is currently retrying the
+   exception, verifying that the exception is no longer non-retryable. You can
+   terminate this Workflow in the WebUI, as it will never successfully complete.
 6. Stop your Worker by using **Ctrl-C** in the terminal it is running in.
 
 ## Part B: Configure Retry Policies to set Non-Retryable Error Types
@@ -99,14 +99,14 @@ NonRetryableErrorTypes: []string{"CreditCardError"},
 ## Part C: Add Heartbeats
 
 In this part of the exercise, you will add heartbeating to a new Activity,
-`PollDeliveryDriver` The `PollDeliveryDriver` method attempts to contact a
+`NotifyDeliveryDriver` The `NotifyDeliveryDriver` method attempts to contact a
 driver to deliver the customers pizza. It may take a while for a delivery driver
 to accept the delivery, and you want to ensure that the Activity is still alive
 and processing. Heartbeats are used to do this, and fail fast if a failure is
 detected.
 
-In this exercise, instead of attempting to call an external service, success of
-the `PollDeliveryDriver` method call will be simulated.
+In this exercise, instead of attempting to call an external service, you will
+simulate a successful call to the `NotifyDeliveryDriver` method.
 
 **How the simulation works**: The simulation starts by generating a number from
 0 - 14. From there a loop is iterated over from 0 < 10, each time checking to
@@ -120,7 +120,7 @@ be updated to reflect this.
 1. Open `workflow.go`. Locate the `NotifyDeliveryDriver` function and uncomment
    it.
 2. Save and close the file.
-3. Next, open `activities.go`. Within the `PollDeliveryDriver` loop, above the
+3. Next, open `activities.go`. Within the `NotifyDeliveryDriver` loop, above the
    `logger` call, add a heartbeat, providing the iteration number as the
    details.
    ```go
