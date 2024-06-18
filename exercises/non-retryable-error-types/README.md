@@ -44,7 +44,7 @@ exercise, modify the exception that is being thrown to be retryable. To do
 Now that the exception from the `ProcessCreditCard` Activity is no longer set to
 non-retryable, anyone who is running your Activity code may decide how to handle
 the failure. In this case, imagine you have decided that you do not want the
-Activity to retry upon failure -- but you don't want to "hardcode" it to
+Activity to retry upon failure -- but you don't want to "hardcode" it to be
 non-retryable as in Exercise 1. In this part of the exercise, you will configure
 a Retry Policy to disallow this using non-retryable error types.
 
