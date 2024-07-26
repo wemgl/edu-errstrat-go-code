@@ -62,7 +62,7 @@ func PizzaWorkflow(ctx workflow.Context, order PizzaOrder) (OrderConfirmation, e
 		var applicationErr *temporal.ApplicationError
 		if errors.As(err, &applicationErr) {
 			// You could be pushing individual values to a logging system here
-			println("Billing timestamp of failed order:", confirmation.BillingTimestamp)
+			logger.Info("Billing timestamp of failed order:", confirmation.BillingTimestamp)
 			logger.Error("Unable to charge credit card", "Error", err)
 		}
 
