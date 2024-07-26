@@ -2,7 +2,7 @@
 
 During this exercise, you will:
 
-- Throw and handle exceptions in Temporal Workflows and Activities
+- Return and handle errors in Temporal Workflows and Activities
 - Use non-retryable errors to fail an Activity
 - Locate the details of a failure in Temporal Workflows and Activities in the Event History
 
@@ -11,9 +11,9 @@ Make your changes to the code in the `practice` subdirectory (look for
 the code). If you need a hint or want to verify your changes, look at
 the complete version in the `solution` subdirectory.
 
-## Part A: Throw a non-retryable Application Error to fail an Activity
+## Part A: Return a non-retryable Application Error to fail an Activity
 
-In this part of the exercise, you will throw a non-retryable Application Failure 
+In this part of the exercise, you will return a non-retryable Application Failure 
 that will fail your Activities.
 
 Application Failures are used to communicate application-specific failures in
@@ -25,7 +25,7 @@ error that is returned in Go is automatically converted to an `ActivityError`.
 
 1. Start by opening and reviewing the `activities.go` file, familiarizing yourself with
    the Activity functions.
-2. In the `SendBill` Activity, notice how an error is thrown if the
+2. In the `SendBill` Activity, notice how an error is returned if the
    `chargeAmount` is less than 0. If the calculated amount to charge the
    customer is negative, the Activity returns with a non-`nil` error.
    Specifically, it returns with `fmt.Errorf("invalid charge amount: %d (< 1)",
@@ -40,7 +40,7 @@ error that is returned in Go is automatically converted to an `ActivityError`.
    mark the error as a non-retryable `invalidChargeError`.
 3. Go to `ProcessCreditCard` Activity, where you will return an
    `ApplicationError` if the credit card fails its validation step. In this
-   Activity, you will throw an error if the entered credit card number does not
+   Activity, you will return an error if the entered credit card number does not
    have 16 digits. Use the `NewNonRetryableApplicationError()` code from the
    previous step as a reference. Designate this as a `CreditCardError`.
 4. Save your file.
@@ -48,14 +48,14 @@ error that is returned in Go is automatically converted to an `ActivityError`.
 ## Part B: Catch the Activity Failure
 
 In this part of the exercise, you will catch the `ApplicationError` that was
-thrown from the `ProcessCreditCard` Activity and handle it.
+returned from the `ProcessCreditCard` Activity and handle it.
 
 1. Open `workflow.go` in your text editor.
 2. `ProcessCreditCard` is run like so:
    `err = workflow.ExecuteActivity(ctx, ProcessCreditCard, confirmation).Get(ctx, &chargestatus)`.
    Note that the results are returned to `err`, and the next code block, `if err != nil {}`,
    handles any errors that have been returned from the Activity. By default, if a non-retryable
-   `ApplicationFailure` is thrown, the Workflow will fail. However, it is possible to catch this
+   `ApplicationFailure` is returned, the Workflow will fail. However, it is possible to catch this
    failure and either handle it or continue to propagate it up.
 3. Within the `if err != nil {}` block, check for an `ApplicationError` like so:
    ```

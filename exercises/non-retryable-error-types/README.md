@@ -19,9 +19,9 @@ by default. After consideration, you've determined that while you may want to
 immediately fail your Workflow on failure, others who call your Activity may not.
 
 1. Open `activities.go`. In the `ProcessCreditCard` method from the last
-exercise, modify the exception that is being thrown to be retryable. To do
+exercise, modify the error that is being returned to be retryable. To do
    this, change `NewNonRetryableApplicationError` to `NewApplicationError`. Now,
-   when an error is thrown from this Activity, the Activity will be retried.
+   when an error is returned from this Activity, the Activity will be retried.
 2. Save and close the file.
 3. Verify that your Error is now being retried by attempting to execute the
    Workflow. In one terminal, start the Worker by running:
@@ -35,13 +35,13 @@ exercise, modify the exception that is being thrown to be retryable. To do
    ```
 5. Go to the WebUI and view the status of the Workflow. It should be
    **Running**. Inspect the Workflow and see that it is currently retrying the
-   exception, verifying that the exception is no longer non-retryable. You can
+   error, verifying that the erorr is no longer non-retryable. You can
    terminate this Workflow in the WebUI, as it will never successfully complete.
 6. Stop your Worker by using **Ctrl-C** in the terminal it is running in.
 
 ## Part B: Configure Retry Policies to set Non-Retryable Error Types
 
-Now that the exception from the `ProcessCreditCard` Activity is no longer set to
+Now that the error from the `ProcessCreditCard` Activity is no longer set to
 non-retryable, anyone who is running your Activity code may decide how to handle
 the failure. In this case, imagine you have decided that you do not want the
 Activity to retry upon failure -- but you don't want to "hardcode" it to be
