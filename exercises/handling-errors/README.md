@@ -60,7 +60,9 @@ returned from the `ProcessCreditCard` Activity and handle it.
 3. Within the `if err != nil {}` block, check for an `ApplicationError` like so:
    ```
    var applicationErr *temporal.ApplicationError
-		if errors.As(err, &applicationErr) {}
+	if errors.As(err, &applicationErr) {
+      ...
+   }
    ```			
    Within that `if errors.As() {}` block, you can handle the error, add additional logging, and so on. For example, you could add:
    ```
