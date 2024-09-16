@@ -17,6 +17,12 @@ For the exercises, make sure to run `temporal server start-dev --ui-port 8080 --
 | `exercises/non-retryable-error-types` | [Exercise 2](exercises/non-retryable-error-types/README.md) |
 | `exercises/rollback-with-saga`        | [Exercise 3](exercises/rollback-with-saga/README.md)        |
 
+## Instructor-Led Demonstrations
+
+| Directory Name            | Description                                                           |
+| :------------------------ | :-------------------------------------------------------------------- |
+| `demos/error-propagation` | [Cross-Language Error Propagation](demos/error-propagation/README.md) |
+
 ## Reference
 
 The following links provide additional information that you may find helpful as you work through this course.
