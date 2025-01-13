@@ -1,0 +1,61 @@
+name: Continuous Integration
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print build information
+        run: "echo head_ref: ${{ github.head_ref }}, ref: ${{ github.ref }}"
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.22"
+
+      - name: Set up staticcheck
+        run: go install honnef.co/go/tools/cmd/staticcheck@latest 
+
+      - name: Set up workflowcheck
+        run: go install go.temporal.io/sdk/contrib/tools/workflowcheck@latest
+
+      - name: Staticcheck handling-errors
+        run: staticcheck .
+        working-directory: exercises/handling-errors/solution/worker
+
+      - name: Staticcheck non-retryable-error-types
+        run: staticcheck .
+        working-directory: exercises/non-retryable-error-types/solution/worker
+
+      - name: Staticcheck rollback-with-saga
+        run: staticcheck .
+        working-directory: exercises/rollback-with-saga/solution/worker
+
+      - name: Workflowcheck handling-errors
+        run: workflowcheck -show-pos .
+        working-directory: exercises/handling-errors/solution/worker
+
+      - name: Workflowcheck non-retryable-error-types
+        run: workflowcheck -show-pos .
+        working-directory: exercises/non-retryable-error-types/solution/worker
+
+      - name: Workflowcheck rollback-with-saga
+        run: workflowcheck -show-pos .
+        working-directory: exercises/rollback-with-saga/solution/worker
+
+      - name: Build handling-errors
+        run: go build
+        working-directory: exercises/handling-errors/solution/worker
+
+      - name: Build non-retryable-error-types
+        run: go build
+        working-directory: exercises/non-retryable-error-types/solution/worker
+
+      - name: Build rollback-with-saga
+        run: go build
+        working-directory: exercises/rollback-with-saga/solution/worker
