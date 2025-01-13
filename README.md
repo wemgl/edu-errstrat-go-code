@@ -2,7 +2,7 @@
 
 This repository provides code used for exercises and demonstrations
 included in the Go version of the
-[Crafting an Error Handling Strategy](https://learn.temporal.io/courses/crafting-an-error-handling-strategy)
+[Crafting an Error Handling Strategy](https://learn.temporal.io/courses/errstrat/)
 training course.
 
 It's important to remember that the example code used in this course was designed to support learning a specific aspect of Temporal, not to serve as a ready-to-use template for implementing a production system.
@@ -16,6 +16,12 @@ For the exercises, make sure to run `temporal server start-dev --ui-port 8080 --
 | `exercises/handling-errors`           | [Exercise 1](exercises/handling-errors/README.md)           |
 | `exercises/non-retryable-error-types` | [Exercise 2](exercises/non-retryable-error-types/README.md) |
 | `exercises/rollback-with-saga`        | [Exercise 3](exercises/rollback-with-saga/README.md)        |
+
+## Instructor-Led Demonstrations
+
+| Directory Name            | Description                                                           |
+| :------------------------ | :-------------------------------------------------------------------- |
+| `demos/error-propagation` | [Cross-Language Error Propagation](demos/error-propagation/README.md) |
 
 ## Reference
 
