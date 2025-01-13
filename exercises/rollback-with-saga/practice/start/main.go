@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
-	pizza "errstrat/exercises/rollback-with-saga/solution"
+	pizza "errstrat/exercises/rollback-with-saga/practice"
 	"flag"
 	"fmt"
 	"log"

@@ -1,7 +1,7 @@
 package main
 
 import (
-	pizza "errstrat/exercises/rollback-with-saga/solution"
+	pizza "errstrat/exercises/rollback-with-saga/practice"
 	"log"
 
 	"go.temporal.io/sdk/client"
