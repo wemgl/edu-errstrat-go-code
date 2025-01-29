@@ -30,13 +30,10 @@ The following links provide additional information that you may find helpful as 
 * [General Temporal Documentation](https://docs.temporal.io/)
 * [Temporal Go SDK Documentation](https://pkg.go.dev/go.temporal.io/sdk)
 * [Go Language Documentation](https://go.dev/doc/)
-* [GitPod Documentation: Troubleshooting](https://www.gitpod.io/docs/troubleshooting)
 
 ## Exercise Environment for this Course
 
-You can launch an exercise environment for this course in GitPod by
-clicking the button below:
-
-[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/temporalio/edu-errors-go-code)
+You can launch an exercise environment for this course using GitHub Codespaces by 
+following [this](codespaces.md) walkthrough.
 
 Alternatively, you can perform these exercises directly on your computer. Refer to the instructions about setting up a local development environment, which you'll find in the "About this Course" chapter.
