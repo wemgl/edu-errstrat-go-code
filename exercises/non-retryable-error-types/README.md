@@ -100,7 +100,7 @@ NonRetryableErrorTypes: []string{"CreditCardError"},
 
 In this part of the exercise, you will add heartbeating to a new Activity,
 `NotifyDeliveryDriver` The `NotifyDeliveryDriver` method attempts to contact a
-driver to deliver the customers pizza. It may take a while for a delivery driver
+driver to deliver the customer's pizza. It may take a while for a delivery driver
 to accept the delivery, and you want to ensure that the Activity is still alive
 and processing. Heartbeats are used to do this, and fail fast if a failure is
 detected.
@@ -109,9 +109,9 @@ In this exercise, instead of attempting to call an external service, you will
 simulate a successful call to the `NotifyDeliveryDriver` method.
 
 **How the simulation works**: The simulation starts by generating a number from
-0 - 14. From there a loop is iterated over from 0 < 10, each time checking to
+0 - 14. There a loop is iterated over from 0 < 10, each time checking to
 see if the random number matches the loop counter and then sleeping for 5 seconds.
-Each iteration of the loop sends a heartbeat back letting the Workflow know that
+Each iteration of the loop sends a heartbeat back, telling the Workflow that
 progress is still being made. If the number matches a loop counter, it is a success
 and `true` is returned. If it doesn't, then a delivery driver was unable to be
 contacted and false is returned and the `status` of the `OrderConfirmation` will
