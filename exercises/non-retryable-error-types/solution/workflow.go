@@ -10,13 +10,13 @@ import (
 
 func PizzaWorkflow(ctx workflow.Context, order PizzaOrder) (OrderConfirmation, error) {
 	retrypolicy := &temporal.RetryPolicy{
-		MaximumInterval:        time.Second * 10,
-		MaximumAttempts:        3,
+		MaximumInterval:        time.Second * 60,
+		MaximumAttempts:        100,
 		NonRetryableErrorTypes: []string{"CreditCardError"},
 	}
 
 	options := workflow.ActivityOptions{
-		StartToCloseTimeout: time.Second * 5,
+		StartToCloseTimeout: time.Minute * 5,
 		HeartbeatTimeout:    10 * time.Second,
 		RetryPolicy:         retrypolicy,
 	}
