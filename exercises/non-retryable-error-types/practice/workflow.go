@@ -10,15 +10,15 @@ import (
 
 func PizzaWorkflow(ctx workflow.Context, order PizzaOrder) (OrderConfirmation, error) {
 	retrypolicy := &temporal.RetryPolicy{
-		MaximumInterval: time.Second * 60,
-		MaximumAttempts: 100,
-		// TODO Part B: Add a `NonRetryableErrorTypes` parameter.
+		MaximumInterval:        time.Second * 60,
+		MaximumAttempts:        100,
+		NonRetryableErrorTypes: []string{"CreditCardError"},
 	}
 
 	options := workflow.ActivityOptions{
 		StartToCloseTimeout: time.Minute * 5,
 		RetryPolicy:         retrypolicy,
-		// TODO Part D: Add a `HeartbeatTimeout` parameter.
+		HeartbeatTimeout:    time.Second * 10,
 	}
 
 	ctx = workflow.WithActivityOptions(ctx, options)
@@ -44,12 +44,11 @@ func PizzaWorkflow(ctx workflow.Context, order PizzaOrder) (OrderConfirmation, e
 	// We use a short Timer duration here to avoid delaying the exercise
 	workflow.Sleep(ctx, time.Second*3)
 
-	// TODO Part C: Uncomment this function.
-	//err = workflow.ExecuteActivity(ctx, NotifyDeliveryDriver).Get(ctx, nil)
-	//if err != nil {
-	//	logger.Error("Unable to notify delivery driver.", "Error", err)
-	//	return OrderConfirmation{}, err
-	//}
+	err = workflow.ExecuteActivity(ctx, NotifyDeliveryDriver).Get(ctx, nil)
+	if err != nil {
+		logger.Error("Unable to notify delivery driver.", "Error", err)
+		return OrderConfirmation{}, err
+	}
 
 	bill := Bill{
 		CustomerID:  order.Customer.CustomerID,

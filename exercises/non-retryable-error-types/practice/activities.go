@@ -73,7 +73,7 @@ func ProcessCreditCard(ctx context.Context, address Address) (ChargeStatus, erro
 	}
 
 	if len(address.CardNumber) != 16 {
-		return chargestatus, temporal.NewNonRetryableApplicationError("Credit Card Charge Error", "CreditCardError", nil, nil)
+		return chargestatus, temporal.NewApplicationError("Credit Card Charge Error", "CreditCardError", nil, nil)
 	} else {
 		return chargestatus, nil
 	}
@@ -98,9 +98,13 @@ func NotifyDeliveryDriver(ctx context.Context) error {
 			logger.Info("Delivery driver responded")
 			return nil
 		}
-		// TODO Part C: Add a call to `activity.RecordHeartbeat()`
+		activity.RecordHeartbeat(ctx, x)
 		logger.Info("Heartbeat:", x)
 		// TODO Part F: Lengthen the `time.Sleep()` call so the Activity fails.
+		// Uncomment this line…
+		//time.Sleep(time.Second * 15)
+
+		// and comment this line to test heartbeat failures
 		time.Sleep(time.Second * 5)
 	}
 
